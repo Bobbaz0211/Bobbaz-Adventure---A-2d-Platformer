@@ -16,7 +16,6 @@ public class MouseInputHandler implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        gamePanel.spawnOval(e.getX(), e.getY());
 
     }
 
