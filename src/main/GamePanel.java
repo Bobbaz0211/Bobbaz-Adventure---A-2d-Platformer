@@ -15,7 +15,8 @@ public class GamePanel extends JPanel {
     private float xDelta = 0, yDelta = 0;
     private float speed = 5;
     private float xDir = speed, yDir = speed;
-    private BufferedImage image;
+    private BufferedImage image, subImage;
+    private int imageScale = 2;
 
     private void importImage() {
         InputStream is = getClass().getResourceAsStream("/player_sprites.png");
@@ -25,7 +26,6 @@ public class GamePanel extends JPanel {
             e.printStackTrace();
         }
     }
-
 
     public GamePanel() {
         mouseInputHandler = new MouseInputHandler(this);
@@ -60,7 +60,10 @@ public class GamePanel extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        g.drawImage(image.getSubimage(0,0,64,40),0,0,128,80,null);
+
+        subImage = image.getSubimage(0,0, 64, 40);
+        g.drawImage(subImage, (int)xDelta, (int)yDelta,subImage.getWidth()*imageScale,subImage.getHeight()*imageScale,null);
+
 
     }
 
