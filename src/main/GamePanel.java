@@ -13,10 +13,11 @@ import java.io.InputStream;
 public class GamePanel extends JPanel {
     private MouseInputHandler mouseInputHandler;
     private float xDelta = 0, yDelta = 0;
-    private float speed = 5;
-    private float xDir = speed, yDir = speed;
-    private BufferedImage image, subImage;
+
+    private BufferedImage image;
     private int imageScale = 2;
+    private BufferedImage[][] animationMatrix;
+    private int animationTick, animationIndex, animationSpeed = 20;
 
     private void importImage() {
         InputStream is = getClass().getResourceAsStream("/player_sprites.png");
@@ -24,6 +25,14 @@ public class GamePanel extends JPanel {
             image = ImageIO.read(is);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
@@ -34,6 +43,20 @@ public class GamePanel extends JPanel {
         addMouseListener(mouseInputHandler);
         addMouseMotionListener(mouseInputHandler);
         importImage();
+        loadAnimations();
+    }
+
+    private void loadAnimations() {
+        animationMatrix = new BufferedImage[9][6];
+
+        for (int j = 0; j < animationMatrix.length; j++) {
+
+            for (int i = 0; i < animationMatrix[j].length; i++) {
+                animationMatrix[j][i] = image.getSubimage(i * 64, j * 40, 64, 40);
+
+            }
+        }
+
     }
 
     private void setPanelSize() {
@@ -61,14 +84,22 @@ public class GamePanel extends JPanel {
         super.paintComponent(g);
 
 
-        subImage = image.getSubimage(0,0, 64, 40);
-        g.drawImage(subImage, (int)xDelta, (int)yDelta,subImage.getWidth()*imageScale,subImage.getHeight()*imageScale,null);
+        updateAnimationTick();
+        g.drawImage(animationMatrix[1][animationIndex], (int)xDelta, (int)yDelta,animationMatrix[2][1].getWidth()*imageScale,animationMatrix[2][1].getHeight()*imageScale,null);
 
 
     }
 
-
-
+    private void updateAnimationTick() {
+        animationTick++;
+        if(animationTick >= animationSpeed) {
+            animationTick = 0;
+            animationIndex++;
+            if(animationIndex >= 6) {
+                animationIndex = 0;
+            }
+        }
+    }
 
 
 }
